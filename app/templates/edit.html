@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>{{title}}</h1>
+	<form action="" method="post">
+		{{ form.hidden_tag() }}
+		<p> 
+			{{ form.title.label }}<br>
+			{{ form.title(size=32)}}<br>
+			{% for error in form.title.errors%}
+			<span style="color: red;">[{{ error }}]</span>
+			{% endfor %}
+		</p>
+		<p> 
+			{{ form.description.label}}<br>
+			{{ form.description(cols=50, rows=4)}}<br>
+			{% for error in form.description.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+		</p>
+		<p> 
+			{{ form.opts.label}}<br>
+			{{ form.opts }}<br>
+			{% for error in form.opts.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+		</p>
+		<p>{{form.submit()}}</p>
+	</form>
+{% endblock %}
+
+<!-- add {{form.csrf_token}}-->
