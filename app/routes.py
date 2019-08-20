@@ -61,20 +61,22 @@ def item(category_id, item_id):
 
 @app.route('/catalog/<item_id>/edit/', methods=['GET', 'POST'])
 def edit(item_id):
-	form = EditItemForm()
-	item = Item.query.get(item_id)
-	if form.validate_on_submit(): 
-		item.title = form.title.data
-		item.description = form.description.data
-		item.category = form.opts.data
-		db.session.commit()
-		flash('Your changes: (Title: {}, Description: {}, Category: {}) have been saved!'.format(item.title, item.description, item.category.title))
-		return redirect(url_for('index'))
-	elif request.method == 'GET':
-		form.title.data = item.title 
-		form.description.data = item.description
-		form.opts.data = item.category
-	return render_template('edit.html',title='Edit Item',form=form)
+    if 'username' not in login_session: 
+        return redirect('/login')
+    form = EditItemForm()
+    item = Item.query.get(item_id)
+    if form.validate_on_submit(): 
+        item.title = form.title.data
+        item.description = form.description.data
+        item.category = form.opts.data
+        db.session.commit()
+        flash('Your changes: (Title: {}, Description: {}, Category: {}) have been saved!'.format(item.title, item.description, item.category.title))
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        form.title.data = item.title 
+        form.description.data = item.description
+        form.opts.data = item.category
+        return render_template('edit.html',title='Edit Item',form=form)
 
 # --------------------------------------
 # Shows the delete form of the item that is selected
@@ -82,15 +84,18 @@ def edit(item_id):
 
 @app.route('/catalog/<item_id>/delete/', methods=['GET', 'POST'])
 def delete(item_id):
-	form = DeleteItemForm()
-	item = Item.query.get(item_id)
-	if form.validate_on_submit(): 
-		db.session.delete(item)
-		db.session.commit()
-		flash('This item was deleted.')
-		return redirect(url_for('index'))
-	elif request.method == 'GET':
-		return render_template('delete.html', title='Delete Item', form=form)
+    #Check if user is logged in: 
+    if 'username' not in login_session:
+        return redirect('/login')
+    form = DeleteItemForm()
+    item = Item.query.get(item_id)
+    if form.validate_on_submit(): 
+        db.session.delete(item)
+        db.session.commit()
+        flash('This item was deleted.')
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template('delete.html', title='Delete Item', form=form)
 
 # --------------------------------------
 # Shows the form to add an item 
@@ -98,14 +103,17 @@ def delete(item_id):
 
 @app.route('/catalog/add/', methods=['GET','POST'])
 def add():
-	form = AddItemForm()
-	if form.validate_on_submit(): 
-		db.session.add(Item(title=form.title.data, description=form.description.data, category=form.opts.data))
-		db.session.commit()
-		flash('Your item was added!')
-		return redirect(url_for('index'))
-	elif request.method == 'GET':
-		return render_template('edit.html',title='Edit Item', form=form)
+    #Check if user is logged in: 
+    if 'username' not in login_session:
+        return redirect('/login')
+    form = AddItemForm()
+    if form.validate_on_submit(): 
+        db.session.add(Item(title=form.title.data, description=form.description.data, category=form.opts.data))
+        db.session.commit()
+        flash('Your item was added!')
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template('edit.html',title='Edit Item', form=form)
 
 # --------------------------------------
 # Shows the form to add a category 
@@ -113,14 +121,17 @@ def add():
 
 @app.route('/catalog/add_category/', methods=['GET', 'POST'])
 def add_category(): 
-	form = AddCategoryForm()
-	if form.validate_on_submit(): 
-		db.session.add(Category(title=form.title.data))
-		db.session.commit()
-		flash('Your category was added!')
-		return redirect(url_for('index'))
-	elif request.method == 'GET':
-		return render_template('add_category.html', title='Add category', form=form)
+    #Check if user is logged in: 
+    if 'username' not in login_session:
+        return redirect('/login')
+    form = AddCategoryForm()
+    if form.validate_on_submit(): 
+        db.session.add(Category(title=form.title.data))
+        db.session.commit()
+        flash('Your category was added!')
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template('add_category.html', title='Add category', form=form)
 
 
 # --------------------------------------
@@ -224,6 +235,38 @@ def gconnect():
     flash("you are now logged in as %s" % login_session['username'])
     print( "done!")
     return output
+
+# DISCONNECT - Revoke a current user's token and reset their login_session
+
+@app.route('/gdisconnect')
+def gdisconnect():
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        print('Access Token is None')
+        response = make_response(json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    print('In gdisconnect access token is %s', access_token)
+    print('User name is:')
+    print(login_session['username'])
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    print('result is ')
+    print(result)
+    if result['status'] == '200':
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    else:
+        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
 
 # --------------------------------------
