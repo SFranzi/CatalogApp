@@ -94,4 +94,4 @@ The following JSON endpoints are provided.
 |/catalog/categories/JSON                    | Returns all categories               |
 
 ## Credits 
-[Udacity Full Stack Web Developer Nano Degree](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004)
+[Udacity Fullstack Webdeveloper Nanodegree](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004)
