@@ -21,7 +21,7 @@ The application provides a list of items within a variety of categories as well 
 
 1. Clone this repository 
 2. Install required environment
-3. Run virtual environement
+3. Run virtual environement 
 4. Run application with `flask run`
 5. Navigate to `localhost:5000` in the browser
 6. Add categories and items to populate database
@@ -80,8 +80,16 @@ To see if Flask is installed either run the command `pip list` to see which pack
 To install all required packages run `pip install requirements.txt`. 
 The following packages should be installed in your virtual environment. 
 
-| Package              |    Version | Description
------------------------|------------|------------
+| Package              |Version | Command             | Description|
+|----------------------|--------|---------------------|------------
+| Flask                | 1.1.1  |  `pip install flask`|  Flask automatically installs further dependecies: itsdangerous, Jinja2, MarkupSafe, Werkzeug, Click|
+| python-dotenv        | 0.10.3 | `pip install python-dotenv` |  Allows for environement variables to be automatically imported when the flask command is run.|
+| Flask-WTF            | 0.14.2 | `pip install flask-wtf` | For handeling forms. It is a thin wrapper around the WTForms package.|
+| Flask-SQLAlchemy     | 2.4.0  | `pip install flask-sqlalchemy` | ORM for relational databases
+| Flask-Migrate        | 2.5.2  | `pip install flask-migrate`  | Flask wrapper for Alembic. A database migration framework for SQLAlchemy. The alembic, Mako, python-dateutil, pythoneditor and six are automatically installed as a dependencies.|
+| oauth2client | 4.1.3 | `pip install oauth2client` | The dependencies: httplib2, pyasn1, rsa, pyasn1-modules, oauth2client are installed automatically |
+| requests | 2.22.0 | `pip install requests` | The dependencies  urllib3, idna, certifi, chardet, requests are installed automatically|
+
 
 ## JSON Endpoints 
 The following JSON endpoints are provided.
@@ -94,4 +102,5 @@ The following JSON endpoints are provided.
 |/catalog/categories/JSON                    | Returns all categories               |
 
 ## Credits 
-[Udacity Fullstack Webdeveloper Nanodegree](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004)
+[Udacity Full Stack Web Developer Nano Degree](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004)
+
