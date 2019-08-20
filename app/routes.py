@@ -236,7 +236,9 @@ def gconnect():
     print( "done!")
     return output
 
+# --------------------------------------
 # DISCONNECT - Revoke a current user's token and reset their login_session
+# --------------------------------------
 
 @app.route('/gdisconnect')
 def gdisconnect():
