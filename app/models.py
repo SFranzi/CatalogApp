@@ -1,4 +1,5 @@
-from app import db
+from app import db, login
+from flask_login import UserMixin
 
 #The Category class inherits from db.Model, a base class for all models from Flask-SQLAlchemy 
 
@@ -44,3 +45,17 @@ class Item(db.Model):
 			'description': self.description,
 			'category_id': self.category_id
 		}
+
+class User(UserMixin, db.Model):
+
+	__tablename__ = 'user'
+
+	id = db.Column(db.String(64), primary_key=True)
+	name = db.Column(db.String(64), index= True, unique=True)
+	email = db.Column(db.String(120), index=True, unique=True)
+	#profile_pic = db.Column(db.String(120)))
+
+
+@login.user_loader
+def load_user(id):
+	return User.query.get(id)

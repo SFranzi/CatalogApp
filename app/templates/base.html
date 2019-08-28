@@ -2,30 +2,21 @@
     <head>
         <title>{{title}}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <!-- GOOGLE OAUTH SIGN IN--> 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
-        <script>
-        function start() {
-          gapi.load('auth2', function() {
-            auth2 = gapi.auth2.init({
-              client_id: '569952233819-lgdlvk1oegia299p1gbil25j51gis3q0.apps.googleusercontent.com'
-            });
-          });
-        }
-    </script>
     </head>
     <body style="background-color: #E5E2E2;">
     	<nav class="navbar navbar-dark bg-primary">
             <div class="container-fluid">
                 <div class="navbar-header">
     				<a class="navbar-brand h1 " href="{{url_for('index')}}">
-                        <span> {{title}} </span>
+                        <span> Catalog App </span>
                     </a>
                 </div>
                 <div class="nav navbar-nav navbar-right">
-                    <button id="signinButton" class="btn btn-outline-light">Sign In</button>
-                    <div id="result"></div>
+                  {% if current_user.is_authenticated %}
+                  <a class="button btn btn-outline-light" href="{{url_for('logout')}}">Logout</a>
+                  {% else %}
+                  <a class="button btn btn-outline-light" href="{{url_for('login')}}">Google Login</a>
+                  {% endif %}
                 </div>
             </div>
 		</nav>
@@ -45,37 +36,5 @@
 		{% block content %}
 		{% endblock %}
     	</div>
-
-        <!-- GOOGLE OAUTH SIGN IN SCRIPT -->
-        <script>
-          $('#signinButton').click(function() {
-            function signInCallback(authResult){
-              if (authResult['code']){
-                $('#signinButton').attr('style', 'display: none');
-                $.ajax({
-                  type: 'POST',
-                  url: '/gconnect?state={{STATE}}',
-                  headers: {
-                  'X-Requested-With': 'XMLHttpRequest'
-                  },
-                  contentType: 'application/octet-stream; charset=utf-8',
-                  success:function(result){
-                    $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
-                         setTimeout(function() {
-                          window.location.href = "/";
-                         }, 2000);
-                  },
-                  processData:false,
-                  data:authResult['code']
-                });
-              } else{
-                // handle error
-                console.log('There was an error: ' + authResult['error']);
-                $('#result').html('Failed to make a server-side call. Check your configuration and console.');
-              }
-            }
-            auth2.grantOfflineAccess().then(signInCallback);
-          });
-        </script>
    	</body>
 </html>

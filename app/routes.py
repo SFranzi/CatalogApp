@@ -1,11 +1,20 @@
-from flask import render_template, flash, redirect, url_for, request, redirect, jsonify
+from flask import render_template, flash, url_for, request, redirect, jsonify
 from app import app, db
 from app.forms import EditItemForm, DeleteItemForm, AddItemForm, AddCategoryForm
-from app.models import Item, Category 
+from app.models import Item, Category, User
 
 # --------------------------------------
 # OAUTH IMPORTS
 # --------------------------------------
+# Python standard libraries
+import json
+import os
+# Third-party libraries
+from flask_login import current_user, login_required, login_user, logout_user
+from oauthlib.oauth2 import WebApplicationClient
+import requests
+
+'''
 from flask import session as login_session
 import random 
 import string
@@ -16,14 +25,21 @@ import httplib2
 import json
 from flask import make_response
 import requests
-
+'''
 # --------------------------------------
 # OAUTH VARIABLES: CLIENT_ID, APPLICATION_NAME
 # --------------------------------------
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
+GOOGLE_DISCOVERY_URL = (
+    "https://accounts.google.com/.well-known/openid-configuration"
+)
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
+'''
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Catalog Item Application"
-
+'''
 @app.route('/')
 @app.route('/catalog/')
 def index():
@@ -60,9 +76,10 @@ def item(category_id, item_id):
 # --------------------------------------
 
 @app.route('/catalog/<item_id>/edit/', methods=['GET', 'POST'])
+@login_required
 def edit(item_id):
-    if 'username' not in login_session: 
-        return redirect('/login')
+    #if 'username' not in login_session: 
+        #return redirect('/login')
     form = EditItemForm()
     item = Item.query.get(item_id)
     if form.validate_on_submit(): 
@@ -83,10 +100,11 @@ def edit(item_id):
 # --------------------------------------
 
 @app.route('/catalog/<item_id>/delete/', methods=['GET', 'POST'])
+@login_required
 def delete(item_id):
     #Check if user is logged in: 
-    if 'username' not in login_session:
-        return redirect('/login')
+    #if 'username' not in login_session:
+        #return redirect('/login')
     form = DeleteItemForm()
     item = Item.query.get(item_id)
     if form.validate_on_submit(): 
@@ -102,10 +120,11 @@ def delete(item_id):
 # --------------------------------------
 
 @app.route('/catalog/add/', methods=['GET','POST'])
+@login_required
 def add():
     #Check if user is logged in: 
-    if 'username' not in login_session:
-        return redirect('/login')
+    #if 'username' not in login_session:
+        #return redirect('/login')
     form = AddItemForm()
     if form.validate_on_submit(): 
         db.session.add(Item(title=form.title.data, description=form.description.data, category=form.opts.data))
@@ -120,10 +139,11 @@ def add():
 # --------------------------------------
 
 @app.route('/catalog/add_category/', methods=['GET', 'POST'])
+@login_required
 def add_category(): 
     #Check if user is logged in: 
-    if 'username' not in login_session:
-        return redirect('/login')
+    #if 'username' not in login_session:
+        #eturn redirect('/login')
     form = AddCategoryForm()
     if form.validate_on_submit(): 
         db.session.add(Category(title=form.title.data))
@@ -141,7 +161,94 @@ def add_category():
 # --------------------------------------
 # Shows the login page
 # --------------------------------------
+@app.route("/login")
+def login():
+    # Find out what URL to hit for Google login
+    google_provider_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
+    authorization_endpoint = google_provider_cfg["authorization_endpoint"]
 
+    # Use library to construct the request for Google login and provide
+    # scopes that let you retrieve user's profile from Google
+    request_uri = client.prepare_request_uri(
+        authorization_endpoint,
+        redirect_uri=request.base_url + "/callback",
+        scope=["openid", "email", "profile"],
+    )
+    return redirect(request_uri)
+
+# --------------------------------------
+# Oauth callback function
+# -------------------------------------- 
+
+
+@app.route("/login/callback")
+def callback():
+    # Get authorization code Google sent back to you
+    code = request.args.get("code")
+    # Find out what URL to hit to get tokens that allow you to ask for
+    # things on behalf of a user
+    google_provider_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
+    token_endpoint = google_provider_cfg["token_endpoint"]
+    # Prepare and send a request to get tokens! Yay tokens!
+    token_url, headers, body = client.prepare_token_request(
+        token_endpoint,
+        authorization_response=request.url,
+        redirect_url=request.base_url,
+        code=code
+    )
+    token_response = requests.post(
+        token_url,
+        headers=headers,
+        data=body,
+        auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
+    )
+
+    # Parse the tokens!
+    client.parse_request_body_response(json.dumps(token_response.json()))
+    # Now that you have tokens (yay) let's find and hit the URL
+    # from Google that gives you the user's profile information,
+    # including their Google profile image and email
+    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
+    uri, headers, body = client.add_token(userinfo_endpoint)
+    userinfo_response = requests.get(uri, headers=headers, data=body)
+    # You want to make sure their email is verified.
+    # The user authenticated with Google, authorized your
+    # app, and now you've verified their email through Google!
+    if userinfo_response.json().get("email_verified"):
+        unique_id = userinfo_response.json()["sub"]
+        users_email = userinfo_response.json()["email"]
+        #picture = userinfo_response.json()["picture"]
+        users_name = userinfo_response.json()["given_name"]
+    else:
+        return "User email not available or not verified by Google.", 400
+    # Create a user in your db with the information provided
+    # by Google
+    user = User(
+        id=unique_id, name=users_name, email=users_email
+    )
+
+    # Doesn't exist? Add it to the database
+    if not User.query.get(unique_id):
+        db.session.add(user)
+        db.session.commit()
+
+    # Begin user session by logging the user in
+    login_user(user)
+
+    # Send user back to homepage
+    return redirect(url_for("index"))
+
+# --------------------------------------
+# Logout
+# -------------------------------------- 
+    
+    
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("index"))
+'''
 @app.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
@@ -152,6 +259,7 @@ def showLogin():
 # --------------------------------------
 # Oauth redirect function
 # -------------------------------------- 
+
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -269,7 +377,7 @@ def gdisconnect():
         response = make_response(json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
-
+'''
 
 # --------------------------------------
 # JSON APIS TO SHOW CATALOG INFORMATION
