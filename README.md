@@ -77,18 +77,23 @@ To see if Flask is installed either run the command `pip list` to see which pack
 
 #### Installed packages (requirements.txt)
 
-To install all required packages run `pip install requirements.txt`. 
-The following packages should be installed in your virtual environment. 
+To install all required packages run `pip install requirements.txt`. To install a package individually run `pip install <package>`
+The following packages should be installed in your virtual environment. Dependencies are installed automatically.  
 
-| Package              |Version | Command             | Description|
-|----------------------|--------|---------------------|------------
-| Flask                | 1.1.1  |  `pip install flask`|  Flask automatically installs further dependecies: itsdangerous, Jinja2, MarkupSafe, Werkzeug, Click|
-| python-dotenv        | 0.10.3 | `pip install python-dotenv` |  Allows for environement variables to be automatically imported when the flask command is run.|
-| Flask-WTF            | 0.14.2 | `pip install flask-wtf` | For handeling forms. It is a thin wrapper around the WTForms package.|
-| Flask-SQLAlchemy     | 2.4.0  | `pip install flask-sqlalchemy` | ORM for relational databases
-| Flask-Migrate        | 2.5.2  | `pip install flask-migrate`  | Flask wrapper for Alembic. A database migration framework for SQLAlchemy. The alembic, Mako, python-dateutil, pythoneditor and six are automatically installed as a dependencies.|
-| oauth2client | 4.1.3 | `pip install oauth2client` | The dependencies: httplib2, pyasn1, rsa, pyasn1-modules, oauth2client are installed automatically |
-| requests | 2.22.0 | `pip install requests` | The dependencies  urllib3, idna, certifi, chardet, requests are installed automatically|
+| Package              | Version | Description| Dependencies|
+|----------------------|---------|-----------|--------------|
+| Flask                | 1.1.1  |  Flask automatically installs | itsdangerous, Jinja2, MarkupSafe, Werkzeug, Click|
+| python-dotenv        | 0.10.3 |  Allows for environement variables to be automatically imported when the flask command is run.| 
+| Flask-WTF            | 0.14.2 | For handeling forms. It is a thin wrapper around the WTForms package.|
+| Flask-SQLAlchemy     | 2.4.0  | ORM for relational databases
+| Flask-Migrate        | 2.5.2 | Flask wrapper for Alembic. A database migration framework for SQLAlchemy. |  alembic, Mako, python-dateutil, pythoneditor, six |
+| requests | 2.22.0  | HTTP library | urllib3, idna, certifi, chardet, requests |
+| pyOpenSSL | 19.0.0 | Python wrapper module around the OpenSSL library | asn1crypto-0.24.0, cffi-1.12.3, cryptography-2.7, pycparser-2.19 |
+| oauthlib | 3.1.0 | OAuthLib is a framework which implements the logic of OAuth1 or OAuth2 |
+| flask-login | 0.4.1 | Provides user session management | 
+| pycodestyle | 2.5.0 | Checks [Python Style Guide requirements](https://www.python.org/dev/peps/pep-0008/) 
+
+
 
 
 ## JSON Endpoints 
@@ -103,4 +108,5 @@ The following JSON endpoints are provided.
 
 ## Credits 
 [Udacity Full Stack Web Developer Nano Degree](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004)
-
+[Create a Flask Application With Google Login by Real Python](https://realpython.com/flask-google-login/)
+[Flask Mega-Tutorial by Miguel Grinberg](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)

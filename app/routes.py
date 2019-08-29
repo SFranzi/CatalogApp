@@ -1,6 +1,7 @@
 from flask import render_template, flash, url_for, request, redirect, jsonify
 from app import app, db
-from app.forms import EditItemForm, DeleteItemForm, AddItemForm, AddCategoryForm
+from app.forms import EditItemForm, DeleteItemForm, AddItemForm, \
+                      AddCategoryForm
 from app.models import Item, Category, User
 
 # --------------------------------------
@@ -31,70 +32,79 @@ client = WebApplicationClient(GOOGLE_CLIENT_ID)
 # ROUTES
 # --------------------------------------
 
+
 @app.route('/')
 @app.route('/catalog/')
 def index():
-	categories = Category.query.all()
-	items = Item.query.all()
-	return render_template('index.html', title='Catalog App', categories=categories, items=items)
+    categories = Category.query.all()
+    items = Item.query.all()
+    return render_template('index.html', title='Catalog App',
+                           categories=categories, items=items)
 
 # --------------------------------------
 # Shows all categories, plus the items of the category that is selected
 # --------------------------------------
 
+
 @app.route('/catalog/<category_id>/items/')
-def category(category_id): 
-	categories = Category.query.all()
-	category = Category.query.get(category_id)
-	items = Item.query.filter_by(category=category)
-	return render_template('category.html', title='Catalog App', categories=categories, items=items) 
+def category(category_id):
+    categories = Category.query.all()
+    category = Category.query.get(category_id)
+    items = Item.query.filter_by(category=category)
+    return render_template('category.html', title='Catalog App',
+                           categories=categories, items=items)
 
 # --------------------------------------
 # Shows the desciption of the item that is selected
 # --------------------------------------
 
+
 @app.route('/catalog/<category_id>/<item_id>/')
 def item(category_id, item_id):
-	item = Item.query.get(item_id)
-	return render_template('item.html', title='Catalog App', item=item)
+    item = Item.query.get(item_id)
+    return render_template('item.html', title='Catalog App', item=item)
 
 # --------------------------------------
 # Shows the edit form of the item that is selected
 # --------------------------------------
 
+
 @app.route('/catalog/<item_id>/edit/', methods=['GET', 'POST'])
 @login_required
 def edit(item_id):
-    #if 'username' not in login_session: 
-        #return redirect('/login')
+    # if 'username' not in login_session:
+    # return redirect('/login')
     form = EditItemForm()
     item = Item.query.get(item_id)
-    if form.validate_on_submit(): 
+    if form.validate_on_submit():
         item.title = form.title.data
         item.description = form.description.data
         item.category = form.opts.data
         db.session.commit()
-        flash('Your changes: (Title: {}, Description: {}, Category: {}) have been saved!'.format(item.title, item.description, item.category.title))
+        flash('Your changes: (Title: {}, Description: {}, Category: {}) \
+              have been saved!'.format(item.title, item.description,
+              item.category.title))
         return redirect(url_for('index'))
     elif request.method == 'GET':
-        form.title.data = item.title 
+        form.title.data = item.title
         form.description.data = item.description
         form.opts.data = item.category
-        return render_template('edit.html',title='Edit Item',form=form)
+        return render_template('edit.html', title='Edit Item', form=form)
 
 # --------------------------------------
 # Shows the delete form of the item that is selected
 # --------------------------------------
 
+
 @app.route('/catalog/<item_id>/delete/', methods=['GET', 'POST'])
 @login_required
 def delete(item_id):
-    #Check if user is logged in: 
-    #if 'username' not in login_session:
-        #return redirect('/login')
+    # Check if user is logged in:
+    # if 'username' not in login_session:
+    # return redirect('/login')
     form = DeleteItemForm()
     item = Item.query.get(item_id)
-    if form.validate_on_submit(): 
+    if form.validate_on_submit():
         db.session.delete(item)
         db.session.commit()
         flash('This item was deleted.')
@@ -103,42 +113,47 @@ def delete(item_id):
         return render_template('delete.html', title='Delete Item', form=form)
 
 # --------------------------------------
-# Shows the form to add an item 
+# Shows the form to add an item
 # --------------------------------------
 
-@app.route('/catalog/add/', methods=['GET','POST'])
+
+@app.route('/catalog/add/', methods=['GET', 'POST'])
 @login_required
 def add():
-    #Check if user is logged in: 
-    #if 'username' not in login_session:
-        #return redirect('/login')
+    # Check if user is logged in:
+    # if 'username' not in login_session:
+    # return redirect('/login')
     form = AddItemForm()
-    if form.validate_on_submit(): 
-        db.session.add(Item(title=form.title.data, description=form.description.data, category=form.opts.data))
+    if form.validate_on_submit():
+        db.session.add(Item(title=form.title.data,
+                       description=form.description.data,
+                       category=form.opts.data))
         db.session.commit()
         flash('Your item was added!')
         return redirect(url_for('index'))
     elif request.method == 'GET':
-        return render_template('edit.html',title='Edit Item', form=form)
+        return render_template('edit.html', title='Edit Item', form=form)
 
 # --------------------------------------
-# Shows the form to add a category 
+# Shows the form to add a category
 # --------------------------------------
+
 
 @app.route('/catalog/add_category/', methods=['GET', 'POST'])
 @login_required
-def add_category(): 
-    #Check if user is logged in: 
-    #if 'username' not in login_session:
-        #eturn redirect('/login')
+def add_category():
+    # Check if user is logged in:
+    # if 'username' not in login_session:
+    # return redirect('/login')
     form = AddCategoryForm()
-    if form.validate_on_submit(): 
+    if form.validate_on_submit():
         db.session.add(Category(title=form.title.data))
         db.session.commit()
         flash('Your category was added!')
         return redirect(url_for('index'))
     elif request.method == 'GET':
-        return render_template('add_category.html', title='Add category', form=form)
+        return render_template('add_category.html', title='Add category',
+                               form=form)
 
 
 # --------------------------------------
@@ -148,6 +163,8 @@ def add_category():
 # --------------------------------------
 # Shows the login page
 # --------------------------------------
+
+
 @app.route("/login")
 def login():
     # Find out what URL to hit for Google login
@@ -165,7 +182,7 @@ def login():
 
 # --------------------------------------
 # Oauth callback function
-# -------------------------------------- 
+# --------------------------------------
 
 
 @app.route("/login/callback")
@@ -204,7 +221,7 @@ def callback():
     if userinfo_response.json().get("email_verified"):
         unique_id = userinfo_response.json()["sub"]
         users_email = userinfo_response.json()["email"]
-        #picture = userinfo_response.json()["picture"]
+        # picture = userinfo_response.json()["picture"]
         users_name = userinfo_response.json()["given_name"]
     else:
         return "User email not available or not verified by Google.", 400
@@ -227,9 +244,9 @@ def callback():
 
 # --------------------------------------
 # Logout
-# -------------------------------------- 
-    
-    
+# --------------------------------------
+
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -240,38 +257,40 @@ def logout():
 # JSON API that shows information about all items in the catalog
 # --------------------------------------
 
+
 @app.route('/catalog/items/JSON')
 def itemsJSON():
     items = Item.query.all()
-    return jsonify(items = [i.serialize for i in items])
+    return jsonify(items=[i.serialize for i in items])
 
 # --------------------------------------
-# JSON API that shows information about all items in one category 
+# JSON API that shows information about all items in one category
 # --------------------------------------
+
 
 @app.route('/catalog/category/items/<category_id>/JSON')
 def categoryItemsJSON(category_id):
     category = Category.query.get(category_id)
-    items = Item.query.filter_by(category = category)
-    return jsonify(categoryItems = [i.serialize for i in items ])
+    items = Item.query.filter_by(category=category)
+    return jsonify(categoryItems=[i.serialize for i in items])
 
 
 # --------------------------------------
 # JSON API that shows information about a specific item
 # --------------------------------------
 
+
 @app.route('/catalog/item/<item_id>/JSON')
-def itemJSON(item_id): 
+def itemJSON(item_id):
     item = Item.query.get(item_id)
-    return jsonify(item = item.serialize)
+    return jsonify(item=item.serialize)
 
 # --------------------------------------
 # JSON API that shows information about a all categories
 # --------------------------------------
 
+
 @app.route('/catalog/categories/JSON')
 def categoriesJSON():
     categories = Category.query.all()
-    return jsonify(categories = [i.serialize for i in categories])   
-
-
+    return jsonify(categories=[i.serialize for i in categories])
