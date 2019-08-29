@@ -72,8 +72,6 @@ def item(category_id, item_id):
 @app.route('/catalog/<item_id>/edit/', methods=['GET', 'POST'])
 @login_required
 def edit(item_id):
-    # if 'username' not in login_session:
-    # return redirect('/login')
     form = EditItemForm()
     item = Item.query.get(item_id)
     if form.validate_on_submit():
@@ -99,9 +97,6 @@ def edit(item_id):
 @app.route('/catalog/<item_id>/delete/', methods=['GET', 'POST'])
 @login_required
 def delete(item_id):
-    # Check if user is logged in:
-    # if 'username' not in login_session:
-    # return redirect('/login')
     form = DeleteItemForm()
     item = Item.query.get(item_id)
     if form.validate_on_submit():
@@ -120,9 +115,6 @@ def delete(item_id):
 @app.route('/catalog/add/', methods=['GET', 'POST'])
 @login_required
 def add():
-    # Check if user is logged in:
-    # if 'username' not in login_session:
-    # return redirect('/login')
     form = AddItemForm()
     if form.validate_on_submit():
         db.session.add(Item(title=form.title.data,
@@ -142,9 +134,6 @@ def add():
 @app.route('/catalog/add_category/', methods=['GET', 'POST'])
 @login_required
 def add_category():
-    # Check if user is logged in:
-    # if 'username' not in login_session:
-    # return redirect('/login')
     form = AddCategoryForm()
     if form.validate_on_submit():
         db.session.add(Category(title=form.title.data))
