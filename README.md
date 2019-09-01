@@ -20,8 +20,8 @@ The application provides a list of items within a variety of categories as well 
 - OAuth2 (Google)
 
 ## Executing this project 
-1 - Make sure you have [Python](https://www.python.org/downloads/) installed.
-2 -  Clone this repository 
+1 - Make sure you have [Python](https://www.python.org/downloads/) installed.  
+2 -  Clone this repository  
 3 - Create the file `.flaskenv` in the parent directory of the
 application, paste the following lines of codes and sustitute the variables GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET with your Google API Keys. 
 
