@@ -155,6 +155,8 @@ def delete_category():
     form = DeleteCategoryForm()
     if form.validate_on_submit():
         category = Category.query.get(form.opts.data.id)
+        for i in category.items.all(): 
+            db.session.delete(i)
         db.session.delete(category)
         db.session.commit()
         flash('Your category was deleted!')
