@@ -35,9 +35,9 @@ class AddCategoryForm(FlaskForm):
 
     title = StringField('Title', validators=[DataRequired()])
     submit = SubmitField('Submit')
-    
 
-class DeleteCategoryForm(FlaskForm): 
+
+class DeleteCategoryForm(FlaskForm):
 
     opts = QuerySelectField('Category', query_factory=category_query,
                             allow_blank=False, get_label='title')

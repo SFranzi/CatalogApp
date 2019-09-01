@@ -145,21 +145,24 @@ def add_category():
                                form=form)
 
 # --------------------------------------
-# Shows the category delete form 
+# Shows the category delete form
 # --------------------------------------
+
 
 @app.route('/catalog/delete_category/', methods=['GET', 'POST'])
 @login_required
 def delete_category():
     form = DeleteCategoryForm()
-    if form.validate_on_submit(): 
+    if form.validate_on_submit():
         category = Category.query.get(form.opts.data.id)
         db.session.delete(category)
         db.session.commit()
         flash('Your category was deleted!')
         return redirect(url_for('index'))
-    elif request.method == 'GET': 
-        return render_template('delete_category.html', title="Delete Category", form=form)
+    elif request.method == 'GET':
+        return render_template('delete_category.html', title="Delete Category",
+                               form=form)
+
 
 # --------------------------------------
 # LOGIN FUNCTIONALITY
