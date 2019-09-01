@@ -7,6 +7,8 @@ The Catalog App is a RESTful web application using the Python framework Flask.
 
 The application provides a list of items within a variety of categories as well as a user registration and authentication system through third-party provider Google. Registered users have the ability to post, edit and delete their own items and categories. 
 
+![image](https://user-images.githubusercontent.com/14871980/64073928-f5ad7800-cca4-11e9-89e6-d76020d08dc9.png)
+
 ## Skills used 
 
 - PYthon 
