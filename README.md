@@ -5,34 +5,56 @@
 
 The Catalog App is a RESTful web application using the Python framework Flask.
 
-The application provides a list of items within a variety of categories as well as a user registration and authentication system through third-party provider Google. Registered users have the ability to post, edit and delete their own items and categories. 
+The application provides a list of items within a variety of categories as well as a user registration and authentication system through third-party provider Google. Registered users have the ability to post, edit and delete their own items and categories when logged in.
+
+![image](https://user-images.githubusercontent.com/14871980/64073928-f5ad7800-cca4-11e9-89e6-d76020d08dc9.png)
 
 ## Skills used 
 
-- PYthon 
+- Python 
+- Flask + Packages
+- SQLAlquemy 
 - HTML 
 - CSS
 - Bootstrap 
-- Flask + Packages
-- SQLAlquemy 
-- OAuth2 
+- OAuth2 (Google)
 
 ## Executing this project 
+1 - Make sure you have [Python](https://www.python.org/downloads/) installed.
+2 -  Clone this repository 
+3 - Create the file `.flaskenv` in the parent directory of the
+application, paste the following lines of codes and sustitute the variables GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET with your Google API Keys. 
 
-1. Clone this repository 
-2. Install required environment
-3. Run virtual environement 
-4. Run application with `flask run`
-5. Navigate to `localhost:5000` in the browser
-6. Add categories and items to populate database
+```
+FLASK_APP = catalog.py
+GOOGLE_CLIENT_ID = "YOUR_CLIENT_ID"
+GOOGLE_CLIENT_SECRET = "YOUR_CLIENT_SECRET"
+OAUTHLIB_INSECURE_TRANSPORT = 1
+```
 
-## Environment 
+4 - Run Python virtual environment 
+```
+$ source venv/Scripts/activate
+```
 
-To run this code you will need the following environement: 
+5 - Run application  
+```
+$ flask run
+```
+6 - Navigate to `localhost:5000` in the browser
 
-- Python [Installation](https://www.python.org/downloads/)
-- Virtual Environment 
+
+## Environment
+-- **Not mandatory** --
+The environment files are stored in the venv folder. So with cloning this repository, the correct environment is set up for you. 
+
+However, if you want to set it up yourself, here is how:
+
+You need to set up: 
+
+- Python Virtual Environment 
 - Flask + Packages
+
 
 ### Setting up the virtual environment 
 
@@ -76,9 +98,7 @@ For example, install flask by running the command:
 To see if Flask is installed either run the command `pip list` to see which packages have been installed or start the Python interpreter with `python` and importing flask by running `import flask`. If this does not provide you with an error, your flask installation was successful. 
 
 #### Installed packages (requirements.txt)
-
-To install all required packages run `pip install requirements.txt`. To install a package individually run `pip install <package>`
-The following packages should be installed in your virtual environment. Dependencies are installed automatically.  
+The following packages should be installed in your virtual environment. Listed dependencies are installed automatically.  
 
 | Package              | Version | Description| Dependencies|
 |----------------------|---------|-----------|--------------|
