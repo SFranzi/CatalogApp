@@ -127,6 +127,6 @@ The following JSON endpoints are provided.
 |/catalog/categories/JSON                    | Returns all categories               |
 
 ## Credits 
-[Udacity Full Stack Web Developer Nano Degree](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004)
-[Create a Flask Application With Google Login by Real Python](https://realpython.com/flask-google-login/)
-[Flask Mega-Tutorial by Miguel Grinberg](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+[Udacity Full Stack Web Developer Nano Degree](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004)  
+[Create a Flask Application With Google Login by Real Python](https://realpython.com/flask-google-login/)  
+[Flask Mega-Tutorial by Miguel Grinberg](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)  
