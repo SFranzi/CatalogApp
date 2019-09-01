@@ -9,8 +9,6 @@ The application provides a list of items within a variety of categories as well 
 
 ![image](https://user-images.githubusercontent.com/14871980/64073928-f5ad7800-cca4-11e9-89e6-d76020d08dc9.png)
 
-![image](https://user-images.githubusercontent.com/14871980/64073928-f5ad7800-cca4-11e9-89e6-d76020d08dc9.png)
-
 ## Skills used 
 
 - Python 
