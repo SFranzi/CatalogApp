@@ -1,7 +1,7 @@
 from flask import render_template, flash, url_for, request, redirect, jsonify
 from app import app, db
 from app.forms import EditItemForm, DeleteItemForm, AddItemForm, \
-                      AddCategoryForm
+                      AddCategoryForm, DeleteCategoryForm
 from app.models import Item, Category, User
 
 # --------------------------------------
@@ -144,6 +144,22 @@ def add_category():
         return render_template('add_category.html', title='Add category',
                                form=form)
 
+# --------------------------------------
+# Shows the category delete form 
+# --------------------------------------
+
+@app.route('/catalog/delete_category/', methods=['GET', 'POST'])
+@login_required
+def delete_category():
+    form = DeleteCategoryForm()
+    if form.validate_on_submit(): 
+        category = Category.query.get(form.opts.data.id)
+        db.session.delete(category)
+        db.session.commit()
+        flash('Your category was deleted!')
+        return redirect(url_for('index'))
+    elif request.method == 'GET': 
+        return render_template('delete_category.html', title="Delete Category", form=form)
 
 # --------------------------------------
 # LOGIN FUNCTIONALITY

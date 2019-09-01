@@ -27,7 +27,7 @@ class AddItemForm(FlaskForm):
     description = TextAreaField('Description',
                                 validators=[Length(min=0, max=140)])
     opts = QuerySelectField('Category', query_factory=category_query,
-                            allow_blank=True, get_label='title')
+                            allow_blank=False, get_label='title')
     submit = SubmitField('Submit')
 
 
@@ -35,3 +35,10 @@ class AddCategoryForm(FlaskForm):
 
     title = StringField('Title', validators=[DataRequired()])
     submit = SubmitField('Submit')
+    
+
+class DeleteCategoryForm(FlaskForm): 
+
+    opts = QuerySelectField('Category', query_factory=category_query,
+                            allow_blank=False, get_label='title')
+    submit = SubmitField('Delete')

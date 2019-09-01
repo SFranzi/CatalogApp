@@ -3,10 +3,11 @@
 {% block content %}
 		<div class="row">
 			<div class="col-md-3" style="border-right: 1px solid #D6D6D6;">
-				{% if current_user.is_authenticated %}
-				<p>(<a href="{{ url_for('add_category') }}">Add Category</a>)</p>
-				{% endif %}
 		        <h1 class="pt-3">Categories</h1>
+		        {% if current_user.is_authenticated %}
+		        <p><a href="{{ url_for('add_category') }}">Add</a> |
+					<a href="{{ url_for('delete_category') }}">Delete</a></p>
+				{% endif %}
 		        <br>
 		        {% for category in categories %}
 		        <div>
@@ -21,10 +22,10 @@
 			
 			
 			<div class="col-md-9  pl-5">
-				{% if current_user.is_authenticated %}
-				<p>(<a href="{{ url_for('add') }}">Add Item</a>)</p>
-				{% endif %}
-		        <h1 class="pt-3">Items</h1> 
+		        <h1 class="pt-3">Items</h1>
+		        {% if current_user.is_authenticated %}
+		        <p><a href="{{ url_for('add') }}">Add Item</a></p> 
+		        {% endif %}
 		        <br>
 		        {% for item in items %}
 		        <div>

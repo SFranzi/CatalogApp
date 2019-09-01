@@ -22,7 +22,7 @@ class Category(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            # 'items': self.items
+            #'items': self.items
             }
 
 
