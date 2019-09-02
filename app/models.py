@@ -19,10 +19,10 @@ class Category(db.Model):
     @property
     def serialize(self):
         # Returns object data in easily serializeable format
+        item = Item.query.filter_by(category_id=self.id).first()
         return {
             'id': self.id,
-            'title': self.title,
-            'items': self.items
+            'title': self.title
             }
 
 

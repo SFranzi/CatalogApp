@@ -263,6 +263,38 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
+
+# --------------------------------------
+# JSON APIs 
+# --------------------------------------
+
+# --------------------------------------
+# JSON API that shows information about the whole catalog
+# --------------------------------------
+
+
+@app.route('/catalog/JSON')
+def jsonCatalog2():
+    
+    catalog = []
+    itemsJSON = []
+
+    categories = Category.query.all()
+    for c in categories:
+        items = Item.query.filter_by(category_id=c.id).all()
+        for i in items:
+            if i != None:
+                itemsJSON.append(i.serialize)
+
+        catalogEntry = c.serialize
+        if itemsJSON != None:
+            catalogEntry['items'] = itemsJSON
+        catalog.append(catalogEntry)
+
+        itemsJSON = []
+
+    return jsonify(Catalog=catalog)
+    
 # --------------------------------------
 # JSON API that shows information about all items in the catalog
 # --------------------------------------
@@ -281,7 +313,7 @@ def itemsJSON():
 @app.route('/catalog/category/items/<category_id>/JSON')
 def categoryItemsJSON(category_id):
     category = Category.query.get(category_id)
-    items = Item.query.filter_by(category=category)
+    items = Item.query.filter_by(category=category).all()
     return jsonify(categoryItems=[i.serialize for i in items])
 
 

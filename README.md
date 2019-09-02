@@ -121,6 +121,7 @@ The following JSON endpoints are provided.
 
 |Endpoint                                    |  Description                         |
 |--------------------------------------------|--------------------------------------|
+|/catalog/JSON                               | Returns the whole catalog
 |/catalog/items/JSON                         | Returns all items within the catalog |
 |/catalog/category/items/<category_id>/JSON  | Returns all items within a category  |
 |/catalog/item/<item_id>/JSON                | Returns a specific item              |
