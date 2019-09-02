@@ -155,7 +155,7 @@ def delete_category():
     form = DeleteCategoryForm()
     if form.validate_on_submit():
         category = Category.query.get(form.opts.data.id)
-        for i in category.items.all(): 
+        for i in category.items.all():
             db.session.delete(i)
         db.session.delete(category)
         db.session.commit()
@@ -265,7 +265,7 @@ def logout():
 
 
 # --------------------------------------
-# JSON APIs 
+# JSON APIs
 # --------------------------------------
 
 # --------------------------------------
@@ -275,7 +275,7 @@ def logout():
 
 @app.route('/catalog/JSON')
 def jsonCatalog2():
-    
+
     catalog = []
     itemsJSON = []
 
@@ -283,18 +283,18 @@ def jsonCatalog2():
     for c in categories:
         items = Item.query.filter_by(category_id=c.id).all()
         for i in items:
-            if i != None:
+            if i is not None:
                 itemsJSON.append(i.serialize)
 
         catalogEntry = c.serialize
-        if itemsJSON != None:
+        if itemsJSON is not None:
             catalogEntry['items'] = itemsJSON
         catalog.append(catalogEntry)
 
         itemsJSON = []
 
     return jsonify(Catalog=catalog)
-    
+
 # --------------------------------------
 # JSON API that shows information about all items in the catalog
 # --------------------------------------
