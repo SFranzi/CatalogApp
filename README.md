@@ -49,7 +49,8 @@ $ flask run
 
 
 ## Environment
--- **Not mandatory** --
+-- **Not mandatory** --  
+
 The environment files are stored in the venv folder. So with cloning this repository, the correct environment is set up for you. 
 
 However, if you want to set it up yourself, here is how:
