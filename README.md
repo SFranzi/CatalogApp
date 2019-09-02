@@ -21,8 +21,10 @@ The application provides a list of items within a variety of categories as well 
 
 ## Executing this project 
 1 - Make sure you have [Python](https://www.python.org/downloads/) installed.  
-2 -  Clone this repository  
-3 - Create the file `.flaskenv` in the parent directory of the
+2 - Clone this repository  
+3 - Install the Python virtual environment (instructions below)
+4 - Install all required packages (instructions below)
+5 - Create the file `.flaskenv` in the parent directory of the
 application, paste the following lines of codes and sustitute the variables GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET with your Google API Keys. 
 
 ```
@@ -32,28 +34,23 @@ GOOGLE_CLIENT_SECRET = "YOUR_CLIENT_SECRET"
 OAUTHLIB_INSECURE_TRANSPORT = 1
 ```
 
-4 - Set the following OAuth endpoints at Google API Console 
+6 - Set the following OAuth endpoints at Google API Console 
 
 ![image](https://user-images.githubusercontent.com/14871980/64129600-54feab80-cdbd-11e9-8c62-220950c5cff9.png)
 
-5 - Run Python virtual environment 
+7 - Run Python virtual environment 
 ```
 $ source venv/Scripts/activate
 ```
 
-5 - Run application  
+8 - Run application  
 ```
 $ flask run
 ```
-6 - Navigate to `localhost:5000` in the browser
+9 - Navigate to `localhost:5000` in the browser
 
 
 ## Environment
--- **Not mandatory** --  
-
-The environment files are stored in the venv folder. So with cloning this repository, the correct environment is set up for you. 
-
-However, if you want to set it up yourself, here is how:
 
 You need to set up: 
 
