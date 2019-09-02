@@ -32,7 +32,7 @@ GOOGLE_CLIENT_SECRET = "YOUR_CLIENT_SECRET"
 OAUTHLIB_INSECURE_TRANSPORT = 1
 ```
 
-4 - Set the follwing OAuth endpoints at Google API Console 
+4 - Set the following OAuth endpoints at Google API Console 
 
 ![image](https://user-images.githubusercontent.com/14871980/64129600-54feab80-cdbd-11e9-8c62-220950c5cff9.png)
 
