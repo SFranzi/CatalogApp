@@ -86,7 +86,7 @@ Python comes with a tool called `pip` which enables you to install packages from
 Install all packages by running the command: 
 
 ```
-(venv) $ pip install requirements.txt
+(venv) $ pip install -r requirements.txt
 ```
 
 To seperately install the packages in the requirements.txt, run `pip install <packagename>`
