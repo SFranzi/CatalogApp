@@ -32,6 +32,9 @@ class Item(db.Model):
     title = db.Column(db.String(64), index=True, unique=True)
     description = db.Column(db.String(140))
     category_id = db.Column(db.Integer(), db.ForeignKey('category.id'))
+    user_id = db.Column(db.String(64))
+    #user_id = db.Column(db.String(), db.ForeignKey('user.id'))
+
 
     def __repr__(self):
         return '<Item {}>'.format(self.title)
@@ -52,8 +55,9 @@ class User(UserMixin, db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.String(64), primary_key=True)
-    name = db.Column(db.String(64), index=True, unique=True)
+    name = db.Column(db.String(64), index=True)
     email = db.Column(db.String(120), index=True, unique=True)
+    #items = db.relationship('Item', backref='user', lazy='dynamic')
 
 
 @login.user_loader

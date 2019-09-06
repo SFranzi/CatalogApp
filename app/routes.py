@@ -74,7 +74,10 @@ def item(category_id, item_id):
 def edit(item_id):
     form = EditItemForm()
     item = Item.query.get(item_id)
-    if form.validate_on_submit():
+    if item.user_id != current_user.id: 
+        flash('You are not allowed to edit this item')
+        return redirect(url_for('index'))
+    elif form.validate_on_submit():
         item.title = form.title.data
         item.description = form.description.data
         item.category = form.opts.data
@@ -99,7 +102,10 @@ def edit(item_id):
 def delete(item_id):
     form = DeleteItemForm()
     item = Item.query.get(item_id)
-    if form.validate_on_submit():
+    if item.user_id != current_user.id: 
+        flash('You are not allowed to delete this item')
+        return redirect(url_for('index'))
+    elif form.validate_on_submit():
         db.session.delete(item)
         db.session.commit()
         flash('This item was deleted.')
@@ -119,7 +125,8 @@ def add():
     if form.validate_on_submit():
         db.session.add(Item(title=form.title.data,
                        description=form.description.data,
-                       category=form.opts.data))
+                       category=form.opts.data, 
+                       user_id=current_user.id))
         db.session.commit()
         flash('Your item was added!')
         return redirect(url_for('index'))
